@@ -1,0 +1,9 @@
+terminate called after throwing an instance of 'err::ex'
+  what():  exception: example.cpp:26: f3 has failed:
+err::ex	./example() [0x401edf]
+err::ex	./example() [0x401e6a]
+err::ex	./example() [0x401e5e]
+err::ex	./example() [0x401e4e]
+err::ex	/usr/lib/libc.so.6(__libc_start_main+0xf0) [0x7f6bf750a610]
+err::ex	./example() [0x4012d9]
+

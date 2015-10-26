@@ -1,0 +1,55 @@
+Small -- mostly terrible -- library for generic backtrace support.
+
+Usage:
+	Requires c++11 or later. Compile with -g and -rdynamic
+
+		#include "err.hpp"
+
+		int main(int, char**) {
+			// ...
+			if(!success)
+				throw make_except("processing failed");
+			// ...
+		}
+
+	See example.cpp for a more 'interesting' example.
+
+	g++ -std=c++14 -g -rdynamic example.cpp err.cpp -o example
+	./example |& ./prettytrace
+
+Example output:
+	Without prettytrace filter:
+		hello, world!
+		terminate called after throwing an instance of 'err::ex'
+		  what():  exception: example.cpp:26: f3 has failed:
+		err::ex ./example() [0x401edf]
+		err::ex ./example() [0x401e6a]
+		err::ex ./example() [0x401e5e]
+		err::ex ./example() [0x401e4e]
+		err::ex /usr/lib/libc.so.6(__libc_start_main+0xf0) [0x7f64b8d20610]
+		err::ex ./example() [0x4012d9]
+		
+		Aborted (core dumped)
+
+	With prettytrace filter:
+		hello, world!
+		terminate called after throwing an instance of 'err::ex'
+		what(): exception: example.cpp:26: f3 has failed:
+		    example.cpp: 26: f3()
+		    example.cpp: 23: f2()
+		    example.cpp: 19: f1()
+		    example.cpp: 14: main
+
+Note:
+	prettytrace is very slow due to the way it's written. It can likely be
+	improved, though if all stderr output is logged then you can run the log
+	through prettytrace only when you want to see a specific error.
+
+	IMPORTANT: you must have the original binary available for this!
+
+	An example of the range you need is in uglytrace.log . To pretty it up, run
+		cat uglytrace.log | ./prettytrace
+
+	As long as your compiler isn't _too_ different from the one I used to
+	generate uglytrace.log, you should get the nice trace seen above.
+
